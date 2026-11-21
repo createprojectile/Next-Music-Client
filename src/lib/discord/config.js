@@ -15,7 +15,7 @@
  * uses different ones instead of patching the source code.
  */
 
-const DEFAULT_CLIENT_ID = "1300258490815741952";
+const DEFAULT_CLIENT_ID = "1573717978338431089";
 const DEFAULT_REDIRECT_PORT = 51820;
 const DEFAULT_REDIRECT_PATH = "/callback";
 

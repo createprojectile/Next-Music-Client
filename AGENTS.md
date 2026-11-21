@@ -47,13 +47,13 @@ pnpm lint
 
 ### 4.1 Где что лежит
 
-| Что | Файл |
-| --- | --- |
-| Discord RPC (Rich Presence) | `src/lib/richPresence.js` |
-| OAuth2 + PKCE авторизация (Listen Along) | `src/lib/listenAlong/discordAuth.js` |
-| **Единые константы приложения** | `src/lib/discord/config.js` |
-| Страница callback после входа | `src/lib/listenAlong/callback/callback.html` |
-| Копирование callback-файлов в dist | `vite.config.js` → `copyListenAlongCallback()` |
+| Что                                      | Файл                                           |
+| ---------------------------------------- | ---------------------------------------------- |
+| Discord RPC (Rich Presence)              | `src/lib/richPresence.js`                      |
+| OAuth2 + PKCE авторизация (Listen Along) | `src/lib/listenAlong/discordAuth.js`           |
+| **Единые константы приложения**          | `src/lib/discord/config.js`                    |
+| Страница callback после входа            | `src/lib/listenAlong/callback/callback.html`   |
+| Копирование callback-файлов в dist       | `vite.config.js` → `copyListenAlongCallback()` |
 
 Раньше `client_id` дублировался в двух файлах, а `redirect_uri` был захардкожен
 внутри `discordAuth.js`. Теперь всё импортируется из `src/lib/discord/config.js`.
@@ -72,11 +72,11 @@ trailing slash — даёт ошибку «Invalid OAuth2 redirect_uri» ещё 
 
 ### 4.3 Переменные окружения (переопределение без правки кода)
 
-| Переменная | По умолчанию | Назначение |
-| --- | --- | --- |
-| `NEXT_MUSIC_DISCORD_CLIENT_ID` | `1300258490815741952` | ID приложения Discord (RPC + OAuth2) |
-| `NEXT_MUSIC_DISCORD_REDIRECT_URI` | `http://127.0.0.1:51820/callback` | точный Redirect из Developer Portal |
-| `NEXT_MUSIC_DISCORD_REDIRECT_PORT` | `51820` | порт, если URI не задан явно |
+| Переменная                         | По умолчанию                      | Назначение                           |
+| ---------------------------------- | --------------------------------- | ------------------------------------ |
+| `NEXT_MUSIC_DISCORD_CLIENT_ID`     | `1573717978338431089`             | ID приложения Discord (RPC + OAuth2) |
+| `NEXT_MUSIC_DISCORD_REDIRECT_URI`  | `http://127.0.0.1:51820/callback` | точный Redirect из Developer Portal  |
+| `NEXT_MUSIC_DISCORD_REDIRECT_PORT` | `51820`                           | порт, если URI не задан явно         |
 
 Локальный HTTP-сервер слушает host/port, **вычисленные из redirect URI**, поэтому
 при смене URI не нужно вручную менять `server.listen(...)`.
@@ -84,7 +84,14 @@ trailing slash — даёт ошибку «Invalid OAuth2 redirect_uri» ещё 
 При запуске OAuth в консоль пишется фактический callback URL — первый признак
 при диагностике.
 
-### 4.4 Если приложение Discord нужно пересоздать
+### 4.4 Текущее приложение Discord
+
+С ноября 2026 используется приложение `Next Music` с ID
+`1573717978338431089`. В нём зарегистрирован ровно один redirect:
+`http://127.0.0.1:51820/callback`. Client secret не используется (PKCE).
+Старый ID `1300258490815741952` больше не применяется.
+
+Если приложение нужно пересоздать:
 
 1. https://discord.com/developers/applications → **New Application** → имя
    `Next Music` → **Create**.
