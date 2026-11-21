@@ -136,6 +136,23 @@ Download the package from the [releases page](https://github.com/Web-Next-Music/
 
 <img width="854" height="609" alt="image" src="https://github.com/user-attachments/assets/6653245c-6302-4ae6-b693-31423a5e09f5" />
 
+## Discord sign-in: "Invalid OAuth2 redirect_uri"
+
+Discord accepts only the redirect URL that is registered in your application's
+**OAuth2 → Redirects** list in the [Developer Portal](https://discord.com/developers/applications).
+It must match character-for-character (host, port, path and trailing slash).
+
+Next Music uses `http://127.0.0.1:51820/callback` by default. If you use your
+own Discord application, add that exact URL to the Redirects list, or override
+it without rebuilding by setting environment variables before launching:
+
+```
+NEXT_MUSIC_DISCORD_CLIENT_ID=<your application id>
+NEXT_MUSIC_DISCORD_REDIRECT_URI=<the redirect registered in the portal>
+```
+
+Client secret is not required — the flow uses PKCE.
+
 ## Recomended Scripts
 
 ### [Yandex Music Downloader](https://greasyfork.org/en/scripts/558745-yandex-music-downloader)

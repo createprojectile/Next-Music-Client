@@ -4,11 +4,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { shell } from "electron";
+import {
+	DISCORD_CLIENT_ID,
+	DISCORD_REDIRECT_HOST,
+	DISCORD_REDIRECT_PATH,
+	DISCORD_REDIRECT_PORT,
+	DISCORD_REDIRECT_URI,
+} from "../discord/config.js";
 
-const DISCORD_CLIENT_ID = "1300258490815741952";
-
-const REDIRECT_PORT = 51820;
-const REDIRECT_URI = `http://127.0.0.1:${REDIRECT_PORT}/callback`;
 const CALLBACK_TIMEOUT_MS = 120000;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -53,7 +56,7 @@ function buildAuthorizeUrl(codeChallenge) {
 		client_id: DISCORD_CLIENT_ID,
 		response_type: "code",
 		scope: "identify",
-		redirect_uri: REDIRECT_URI,
+		redirect_uri: DISCORD_REDIRECT_URI,
 		code_challenge: codeChallenge,
 		code_challenge_method: "S256",
 	});
@@ -164,7 +167,7 @@ function getAuthResult(codeChallenge, codeVerifier) {
 			let url;
 
 			try {
-				url = new URL(req.url, REDIRECT_URI);
+				url = new URL(req.url, DISCORD_REDIRECT_URI);
 			} catch {
 				res.writeHead(400).end("Bad request");
 				return;
@@ -217,7 +220,7 @@ function getAuthResult(codeChallenge, codeVerifier) {
 			/*
 			 * OAuth callback
 			 */
-			if (url.pathname !== "/callback") {
+			if (url.pathname !== DISCORD_REDIRECT_PATH) {
 				res.writeHead(404).end();
 				return;
 			}
@@ -319,7 +322,7 @@ function getAuthResult(codeChallenge, codeVerifier) {
 				if (err.code === "EADDRINUSE") {
 					reject(
 						new Error(
-							`Port ${REDIRECT_PORT} is already in use - close whatever is using it and try again`,
+							`Port ${DISCORD_REDIRECT_PORT} is already in use - close whatever is using it and try again`,
 						),
 					);
 				} else {
@@ -328,7 +331,9 @@ function getAuthResult(codeChallenge, codeVerifier) {
 			}
 		});
 
-		server.listen(REDIRECT_PORT, "127.0.0.1", () => {
+		server.listen(DISCORD_REDIRECT_PORT, DISCORD_REDIRECT_HOST, () => {
+			console.log(`[Discord OAuth] Callback URL: ${DISCORD_REDIRECT_URI}`);
+
 			shell.openExternal(buildAuthorizeUrl(codeChallenge));
 		});
 	});
@@ -339,7 +344,7 @@ async function exchangeCodeForToken(code, codeVerifier) {
 		client_id: DISCORD_CLIENT_ID,
 		grant_type: "authorization_code",
 		code,
-		redirect_uri: REDIRECT_URI,
+		redirect_uri: DISCORD_REDIRECT_URI,
 		code_verifier: codeVerifier,
 	});
 

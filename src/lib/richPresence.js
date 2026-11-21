@@ -1,4 +1,5 @@
 import { Client } from "@xhayper/discord-rpc";
+import { DISCORD_CLIENT_ID } from "./discord/config.js";
 import { getConfig } from "./configManager.js";
 import { registerHandlers, on } from "./ipc/registry.js";
 import { checkGitHubStar } from "./githubStarAuth.js";
@@ -8,7 +9,6 @@ import {
 	onListenAlongStatus,
 } from "./listenAlong/service.js";
 
-const CLIENT_ID = "1300258490815741952";
 const GITHUB_LINK = `https://github.com/Web-Next-Music/Next-Music-Client`;
 const NM_WEBSITE_LINK = `https://nm.diram1x.ru`;
 
@@ -29,7 +29,10 @@ onListenAlongStatus(() => {
 });
 
 function initRPC() {
-	rpc = new Client({ clientId: CLIENT_ID, transport: { type: "ipc" } });
+	rpc = new Client({
+		clientId: DISCORD_CLIENT_ID,
+		transport: { type: "ipc" },
+	});
 
 	rpc.on("ready", () => {
 		console.log("[RPC] Connected to Discord!");
