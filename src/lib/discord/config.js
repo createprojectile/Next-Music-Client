@@ -1,3 +1,5 @@
+import process from "node:process";
+
 /**
  * Shared Discord application settings.
  *
@@ -22,6 +24,9 @@ const DEFAULT_REDIRECT_PATH = "/callback";
 const LOOPBACK_HOSTNAMES = new Set(["127.0.0.1", "localhost", "[::1]"]);
 
 function readEnv(name) {
+	// Use an explicit node:process import: Vite/Rolldown rewrites a bare
+	// `process.env` to `{}` in the main-process bundle, which would silently
+	// disable every override in the packaged application.
 	const value = process.env?.[name];
 
 	return typeof value === "string" && value.trim() ? value.trim() : null;
